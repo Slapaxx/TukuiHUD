@@ -1,0 +1,12 @@
+## Interface: 50100
+## Title: |cffC495DDTukui |rHeads Up Display
+## Author: Sortokk, Azilroka
+## Version: 2.01a
+## Notes: Hud frames for Tukui
+## RequiredDeps: Tukui
+## X-oUF: oUFTukui
+
+config.lua
+functions.lua
+hud.lua
+
