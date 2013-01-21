@@ -1,4 +1,4 @@
-local T, C, L = unpack(Tukui)
+local T, C = unpack(Tukui or AsphyxiaUI or DuffedUI)
 TukuiHud = { }
 TukuiHudDB = {
 	warningTextShown = false,
@@ -32,7 +32,7 @@ TukuiHud.Flash = function(self, duration)
 end
 
 TukuiHud.CreateWarningFrame = function()
-	local f=CreateFrame("ScrollingMessageFrame","TukuiHudWarning",UIParent)
+	local f = CreateFrame("ScrollingMessageFrame","TukuiHudWarning",UIParent)
 	f:SetFont(TukuiHudCF.font,TukuiHudCF.fontsize*2,"THINOUTLINE")
 	f:SetShadowColor(0,0,0,0)
 	f:SetFading(true)
@@ -45,7 +45,6 @@ TukuiHud.CreateWarningFrame = function()
 	f:SetPoint("CENTER",0,T.Scale(-100))
 	f:SetMovable(false)
 	f:SetResizable(false)
-	--f:SetInsertMode("TOP") -- Bugged currently
 end
 
 TukuiHud.PostUpdateHealthHud = function(health, unit, min, max)
@@ -222,4 +221,3 @@ end
 
 SLASH_TUKUIHUD1 = '/hud'
 SlashCmdList["TUKUIHUD"] = TukuiHud.Enable
-		
