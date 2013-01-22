@@ -6,7 +6,7 @@ local addon, ns = ...
 ns.oUF = Tukui and oUFTukui or AsphyxiaUI and oUFAsphyxiaUI
 local oUF = ns.oUF
 local db = TukuiHudCF
-local normTex = [[Interface\AddOns\Tukui_Hud\media\Asphyxia]]
+local normTex = [[Interface\AddOns\TukuiHUD\media\Asphyxia]]
 local glowTex = C["media"].glowTex
 local bubbleTex = C["media"].bubbleTex
 
@@ -489,6 +489,8 @@ local function Hud(self, unit)
         health:SetStatusBarTexture(normTex)
         health:SetOrientation("VERTICAL")
         health:SetFrameLevel(self:GetFrameLevel() + 5)
+		health:CreateBackdrop("Transparent")
+		health.backdrop:CreateShadow()
         
         if db.showvalues then
 			health.value = T.SetFontString(health, db.font, db.fontsize , "THINOUTLINE")
@@ -547,82 +549,37 @@ if TukuiHudCF.warningText then
 	TukuiHud.CreateWarningFrame()
 end
 
-	local width = hud_width
-	if TukuiHudCF.powerhud then
-		width = width + hud_power_width + 2
-	end
+local alpha = TukuiHudCF.alpha
+local width = hud_width + hud_power_width + 2
 
-	if TukuiHudCF.showthreat then
-		width = width + hud_power_width + 2
-	end
+local player_hud = oUF:Spawn('player', "TukuiHUD_Player")
+player_hud:SetPoint("RIGHT", UIParent, "CENTER", T.Scale(-TukuiHudCF.offset), 0)
+player_hud:SetSize(width, hud_height)
+player_hud:SetAlpha(alpha)
+TukuiHud.HideOOC(player_hud)
 
-	local alpha = TukuiHudCF.alpha
+local target_hud = oUF:Spawn('target', "TukuiHUD_Target")
+target_hud:SetPoint("LEFT", UIParent, "CENTER", T.Scale(TukuiHudCF.offset), 0)
+target_hud:SetSize(width, hud_height)
+target_hud:SetAlpha(alpha)
+TukuiHud.HideOOC(target_hud)
 
-	local player_hud = oUF:Spawn('player', "TukuiHUD_Player")
-	player_hud:SetPoint("RIGHT", UIParent, "CENTER", T.Scale(-TukuiHudCF.offset), 0)
-	player_hud:SetSize(width, hud_height)
-	player_hud:SetAlpha(alpha)
-
-	TukuiHud.HideOOC(player_hud)
-
-	width = hud_width
-	if TukuiHudCF.powerhud then
-		width = width + hud_power_width + 2
-	end
-
-	local target_hud = oUF:Spawn('target', "TukuiHUD_Target")
-	target_hud:SetPoint("LEFT", UIParent, "CENTER", T.Scale(TukuiHudCF.offset), 0)
-	target_hud:SetSize(width, hud_height)
-	target_hud:SetAlpha(alpha)
-
-	TukuiHud.HideOOC(target_hud)
-
-	if TukuiHudCF.pethud then
-		width = hud_width
-		if TukuiHudCF.powerhud then
-			width = width + hud_power_width + 2
-		end
-
-		local pet_hud = oUF:Spawn('pet', "TukuiHUD_Pet")
-		pet_hud:SetPoint("BOTTOMRIGHT", TukuiHUD_Player, "BOTTOMLEFT", -T.Scale(80), 0)
-		pet_hud:SetSize(width, hud_height * .75)
-		pet_hud:SetAlpha(alpha)
-		
-		TukuiHud.HideOOC(pet_hud)
-	end
+local pet_hud = oUF:Spawn('pet', "TukuiHUD_Pet")
+pet_hud:SetPoint("BOTTOMRIGHT", player_hud, "BOTTOMLEFT", -T.Scale(80), 0)
+pet_hud:SetSize(width, hud_height * .75)
+pet_hud:SetAlpha(alpha)
+TukuiHud.HideOOC(pet_hud)
 	
-	if TukuiHudCF.tothud then
-		width = hud_width
-		if TukuiHudCF.powerhud then
-			width = width + hud_power_width + 2
-		end
+local tot_hud = oUF:Spawn('targettarget', "TukuiHUD_ToT")
+tot_hud:SetPoint("BOTTOMLEFT", target_hud, "BOTTOMRIGHT", T.Scale(80), 0)
+tot_hud:SetSize(width, hud_height * .75)
+tot_hud:SetAlpha(alpha)
+TukuiHud.HideOOC(tot_hud)
 
-		local tot_hud = oUF:Spawn('targettarget', "TukuiHUD_ToT")
-		tot_hud:SetPoint("BOTTOMLEFT", TukuiHUD_Target, "BOTTOMRIGHT", T.Scale(80), 0)
-		tot_hud:SetSize(width, hud_height * .75)
-		tot_hud:SetAlpha(alpha)
-		
-		TukuiHud.HideOOC(tot_hud)
-	end
-	
-	if TukuiHudCF.focushud then
-		width = hud_width
-		if TukuiHudCF.powerhud then
-			width = width + hud_power_width + 2
-		end
-		
-		local frame = oUF_Tukz_player_Hud
-		if TukuiHudCF.pethud then
-			frame = oUF_Tukz_pet_Hud
-		end
-		
-		local focus_hud = oUF:Spawn('focus', "TukuiHUD_Focus")
-		focus_hud:SetPoint("BOTTOMRIGHT", frame, "BOTTOMLEFT", -T.Scale(80), 0)
-		focus_hud:SetSize(width, hud_height * .75)
-		focus_hud:SetAlpha(alpha)
-		
-		TukuiHud.HideOOC(focus_hud)
-	end
+local focus_hud = oUF:Spawn('focus', "TukuiHUD_Focus")
+focus_hud:SetPoint("BOTTOMRIGHT", player_hud, "BOTTOMLEFT", -T.Scale(80), 0)
+focus_hud:SetSize(width, hud_height * .75)
+focus_hud:SetAlpha(alpha)
 
 -- if TukuiHUD_HolyPowerBar then TukuiHUD_HolyPowerBar:HookScript("OnShow", function(self)
 		-- if UnitAffectingCombat("player") or hideooc == false then
